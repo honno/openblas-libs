@@ -1,9 +1,9 @@
 name: nightly multibuild
 
-on:
-  push: null
-  schedule:
-    - cron: '0 0 * * *'
+on: [push]
+  # push: null
+  # schedule:
+  #   - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -16,22 +16,9 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         platform: [x64]
-        PLAT: [i686, x86_64]
-        INTERFACE64: ['', '1']
-        MB_ML_VER: ['', 2010, 2014]
-        include:
-          - os: ubuntu-latest
-            PLAT: x86_64
-            INTERFACE64: '1'
-            MB_ML_LIBC: musllinux
-            MB_ML_VER: _1_1
-            platform: [x64]
-          - os: ubuntu-latest
-            PLAT: x86_64
-            INTERFACE64: ''
-            MB_ML_LIBC: musllinux
-            MB_ML_VER: _1_1
-            platform: [x64]
+        PLAT: [x86_64]
+        INTERFACE64: ['']
+        MB_ML_VER: ['']
     env:
       REPO_DIR: OpenBLAS
       MACOSX_DEPLOYMENT_TARGET: 10.9
@@ -106,7 +93,7 @@ jobs:
             # The first -t option refers to the token, the second is the "type"
             # option to the "upload" command
             anaconda -t  ${TOKEN} upload \
-            --no-progress --force -u multibuild-wheels-staging \
+            --no-progress --force -u honno-test-org \
             -t file -p "openblas-libs" \
             -v "HEAD" \
             -d "OpenBLAS for multibuild wheels" \
