@@ -14,20 +14,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-11]
+        os: [ubuntu-latest]
         platform: [x64]
         PLAT: [i686, x86_64]
         INTERFACE64: ['', '1']
         MB_ML_VER: ['', 2010, 2014]
         include:
-          - os: macos-11
-            PLAT: arm64
-            INTERFACE64: '1'
-            platform: [x64]
-          - os: macos-11
-            PLAT: arm64
-            INTERFACE64: ''
-            platform: [x64]
           - os: ubuntu-latest
             PLAT: x86_64
             INTERFACE64: '1'
@@ -40,15 +32,6 @@ jobs:
             MB_ML_LIBC: musllinux
             MB_ML_VER: _1_1
             platform: [x64]
-        exclude:
-          - os: macos-11
-            PLAT: i686
-          - os: macos-11
-            MB_ML_VER: 2010
-          - os: macos-11
-            MB_ML_VER: 2014
-          - PLAT: i686
-            INTERFACE64: '1'
     env:
       REPO_DIR: OpenBLAS
       MACOSX_DEPLOYMENT_TARGET: 10.9
