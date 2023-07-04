@@ -106,7 +106,7 @@ jobs:
             # The first -t option refers to the token, the second is the "type"
             # option to the "upload" command
             anaconda -t  ${TOKEN} upload \
-            --no-progress --skip -u multibuild-wheels-staging \
+            --no-progress --force -u multibuild-wheels-staging \
             -t file -p "openblas-libs" \
             -v "HEAD" \
             -d "OpenBLAS for multibuild wheels" \
