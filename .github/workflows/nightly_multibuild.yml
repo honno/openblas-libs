@@ -108,7 +108,7 @@ jobs:
             anaconda -t  ${TOKEN} upload \
             --no-progress --skip -u multibuild-wheels-staging \
             -t file -p "openblas-libs" \
-            -v "$(cd OpenBLAS && git describe --tags --abbrev=8)" \
+            -v "HEAD" \
             -d "OpenBLAS for multibuild wheels" \
             -s "OpenBLAS for multibuild wheels" \
             libs/openblas*.tar.gz;
