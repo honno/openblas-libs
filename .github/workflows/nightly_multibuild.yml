@@ -88,7 +88,7 @@ jobs:
         echo "------ CLEAN CODE --------"
         clean_code $REPO_DIR $OPENBLAS_COMMIT
         echo "------ BUILD LIB --------"
-        build_lib "$PLAT" "$INTERFACE64"
+        build_lib "$PLAT" "$INTERFACE64" "1"
 
     - uses: actions/upload-artifact@v3
       with:
