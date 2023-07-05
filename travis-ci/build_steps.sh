@@ -68,7 +68,7 @@ function build_lib {
     set -x
     local plat=${1:-$PLAT}
     local interface64=${2:-$INTERFACE64}
-    local nightly=$3
+    local nightly=${3:0}
     local manylinux=${MB_ML_VER:-1}
     # Make directory to store built archive
     if [ -n "$IS_OSX" ]; then
