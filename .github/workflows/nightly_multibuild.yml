@@ -21,6 +21,7 @@ jobs:
         MB_ML_VER: ['']
     env:
       REPO_DIR: OpenBLAS
+      OPENBLAS_COMMIT: "HEAD"
       MACOSX_DEPLOYMENT_TARGET: 10.9
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
       TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
@@ -43,7 +44,6 @@ jobs:
         python-version: 3.8
     - name: Set extra env
       run: |
-        git ls-remote https://github.com/xianyi/OpenBLAS HEAD | sed -e "s/\s*HEAD$//" | xargs -I {} echo "OPENBLAS_COMMIT={}" >> $GITHUB_ENV;
         if [ "macos-11" == "${{ matrix.os }}" ]; then
           echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV;
           echo "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib" >> $GITHUB_ENV;
