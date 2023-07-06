@@ -76,28 +76,3 @@ jobs:
         clean_code $REPO_DIR $OPENBLAS_COMMIT
         echo "------ BUILD LIB --------"
         build_lib "$PLAT" "$INTERFACE64" "1"
-
-    - uses: actions/upload-artifact@v3
-      with:
-        path: libs/openblas*.tar.gz
-
-    - name: Upload tarballs
-      run: |
-        set -ex
-        TOKEN=${{ secrets.MULTIBUILD_WHEELS_STAGING_ACCESS }}
-        if [ "$TOKEN" == "" ]; then
-            # The token is available when under the MacPython org, not on forks
-            echo "secrets.MULTIBUILD_WHEELS_STAGING_ACCESS is not defined: skipping";
-        else
-            pip install "urllib3<2.0.0"
-            pip install git+https://github.com/Anaconda-Server/anaconda-client@1.8.0
-            # The first -t option refers to the token, the second is the "type"
-            # option to the "upload" command
-            anaconda -t  ${TOKEN} upload \
-            --no-progress --force -u honno-test-org \
-            -t file -p "openblas-libs" \
-            -v "HEAD" \
-            -d "OpenBLAS for multibuild wheels" \
-            -s "OpenBLAS for multibuild wheels" \
-            libs/openblas*.tar.gz;
-        fi
