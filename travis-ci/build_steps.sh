@@ -166,10 +166,10 @@ function do_build_lib {
     start_spinner
     set -x
     git config --global --add safe.directory '*'
-    (cd OpenBLAS \
-    && patch_source \
-    && CFLAGS="$CFLAGS -fvisibility=protected" make BUFFERSIZE=20 DYNAMIC_ARCH=1 USE_OPENMP=0 NUM_THREADS=64 BINARY=$bitness $interface64_flags $target_flags > /dev/null \
-    && make PREFIX=$BUILD_PREFIX $interface64_flags install )
+    # (cd OpenBLAS \
+    # && patch_source \
+    # && CFLAGS="$CFLAGS -fvisibility=protected" make BUFFERSIZE=20 DYNAMIC_ARCH=1 USE_OPENMP=0 NUM_THREADS=64 BINARY=$bitness $interface64_flags $target_flags > /dev/null \
+    # && make PREFIX=$BUILD_PREFIX $interface64_flags install )
     stop_spinner
     if [ "$nightly" = "1" ]; then
         local version="HEAD"
@@ -189,12 +189,6 @@ function do_build_lib {
         # set +x
     fi
     local out_name="openblas${symbolsuffix}-${version}-${plat_tag}${suff}.tar.gz"
-    tar zcvf libs/$out_name \
-        $BUILD_PREFIX/include/*blas* \
-        $BUILD_PREFIX/include/*lapack* \
-        $BUILD_PREFIX/lib/libopenblas* \
-        $BUILD_PREFIX/lib/pkgconfig/openblas* \
-        $BUILD_PREFIX/lib/cmake/openblas
 }
 
 function upload_to_anaconda {
