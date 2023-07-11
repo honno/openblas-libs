@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch: null
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -18,45 +16,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-11]
+        os: [macos-11]
         platform: [x64]
-        PLAT: [i686, x86_64]
-        INTERFACE64: ['', '1']
-        MB_ML_VER: ['', 2010, 2014]
-        include:
-          - os: macos-11
-            PLAT: arm64
-            INTERFACE64: '1'
-            platform: [x64]
-          - os: macos-11
-            PLAT: arm64
-            INTERFACE64: ''
-            platform: [x64]
-          - os: ubuntu-latest
-            PLAT: x86_64
-            INTERFACE64: '1'
-            MB_ML_LIBC: musllinux
-            MB_ML_VER: _1_1
-            platform: [x64]
-          - os: ubuntu-latest
-            PLAT: x86_64
-            INTERFACE64: ''
-            MB_ML_LIBC: musllinux
-            MB_ML_VER: _1_1
-            platform: [x64]
-        exclude:
-          - os: macos-11
-            PLAT: i686
-          - os: macos-11
-            MB_ML_VER: 2010
-          - os: macos-11
-            MB_ML_VER: 2014
-          - PLAT: i686
-            INTERFACE64: '1'
+        PLAT: [x86_64]
+        INTERFACE64: ['']
+        MB_ML_VER: ['']
     env:
       REPO_DIR: OpenBLAS
       OPENBLAS_COMMIT: "v0.3.23"
-      NIGHTLY: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+      NIGHTLY: ${{ github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
       MACOSX_DEPLOYMENT_TARGET: 10.9
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
       TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
@@ -118,32 +86,3 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         path: libs/openblas*.tar.gz
-
-    - name: Upload tarballs
-      run: |
-        set -ex
-        TOKEN=${{ secrets.MULTIBUILD_WHEELS_STAGING_ACCESS }}
-        if [ "$TOKEN" == "" ]; then
-            # The token is available when under the MacPython org, not on forks
-            echo "secrets.MULTIBUILD_WHEELS_STAGING_ACCESS is not defined: skipping";
-        else
-            # Pin urllib3<2 due to github.com/Anaconda-Platform/anaconda-client/issues/654
-            pip install "urllib3<2.0.0"
-            pip install git+https://github.com/Anaconda-Server/anaconda-client@1.8.0
-            # The first -t option refers to the token, the second is the "type"
-            # option to the "upload" command
-            args=(
-              -t ${TOKEN} upload
-              --no-progress -u multibuild-wheels-staging
-              -t file -p "openblas-libs"
-              -d "OpenBLAS for multibuild wheels"
-              -s "OpenBLAS for multibuild wheels"
-              -v "$(cd OpenBLAS && git describe --tags --abbrev=8)"
-            )
-            if [[ "$NIGHTLY" = "true" ]]; then
-              args+=(--force)
-            else
-              args+=(--skip)
-            fi
-            anaconda "${args[@]}" libs/openblas*.tar.gz
-        fi
